@@ -4,6 +4,10 @@ import 'package:ticket_app/base/res/media.dart';
 import 'package:ticket_app/base/res/styles/app_styles.dart';
 import 'package:ticket_app/base/widgets/app_double_text.dart';
 import 'package:ticket_app/base/widgets/ticket_view.dart';
+import 'package:ticket_app/base/utils/all_json.dart';
+import 'package:ticket_app/routes/app_routes.dart';
+import 'package:ticket_app/screens/widgets/hotel.dart';
+
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -73,10 +77,26 @@ class _HomeScreenState extends State<HomeScreen> {
             ]),
           ),
           const SizedBox(height: 40,),
-          const AppDoubleText(bigText: 'Upcoming Flights', smallText: 'View all',),
+          AppDoubleText(bigText: 'Upcoming Flights', smallText: 'View all', func: () => Navigator.pushNamed(context, AppRoutes.allTickets),),
           const SizedBox(height: 20,),
-          TicketView(),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: ticketList.take(2).map((singleTicket) => TicketView(ticket: singleTicket,)
+              ).toList(),
+            )
+            ),
 
+          const SizedBox(height: 40,),
+          AppDoubleText(bigText: 'Hotels', smallText: 'view all', func: ()=> Navigator.pushNamed(context, AppRoutes.allHotels),),
+          
+          const SizedBox(height: 20,),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: hotelList.take(2).map((singleHotel) => Hotel(hotel:singleHotel)).toList(),
+            ),
+            ),
         ],
       ),
     );
