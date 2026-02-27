@@ -60,37 +60,35 @@ class _HotelDetailState extends State<HotelDetail> {
                     ),
                   ),
                   Positioned(
-                    bottom: 20,
-                    right: 20,
-                    child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                      color: Colors.black.withOpacity(0.5),
-                      child: Text(
-                        hotelList[index]["place"],
-                        style: TextStyle(
-                          fontSize: 24,
-                          color: Colors.white,
-                            shadows: [
-                              Shadow(
-                              blurRadius: 0.0,
-                              color: Colors.red,
-                              offset: Offset(2.0,2.0)
-                            )
-                          ]
-                        ),
-                        )
-                      )
-                    )
+                      bottom: 20,
+                      right: 20,
+                      child: Container(
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          color: Colors.black.withOpacity(0.5),
+                          child: Text(
+                            hotelList[index]["place"],
+                            style: TextStyle(
+                                fontSize: 24,
+                                color: Colors.white,
+                                shadows: [
+                                  Shadow(
+                                      blurRadius: 0.0,
+                                      color: Colors.red,
+                                      offset: Offset(2.0, 2.0))
+                                ]),
+                          )))
                 ],
               ),
             ),
           ),
           SliverList(
               delegate: SliverChildListDelegate([
-            const Padding(
+            Padding(
                 padding: EdgeInsets.all(16.0),
-                child: Text(
-                    "In this article, we will create a custom scroallable")),
+                child: ExpandedTextWidget(
+                  text: hotelList[index]["detail"]
+                  )),
             const Padding(
               padding: EdgeInsets.all(16.0),
               child: Text(
@@ -102,20 +100,71 @@ class _HotelDetailState extends State<HotelDetail> {
               height: 200.0,
               child: ListView.builder(
                   scrollDirection: Axis.horizontal,
-                  itemCount: 10,
-                  itemBuilder: (context, index) {
+                  itemCount: hotelList[index]["images"].length,
+                  itemBuilder: (context, imagesIndex) {
                     return Container(
                       margin: EdgeInsets.all(16),
                       color: Colors.red,
-                      child: Image.network(
-                        "https://www.clker.com/cliparts/n/Y/t/4/9/E/blank-profile-200-150-md.png",
-                      ),
+                      child: Image.asset(
+                        height: 20,
+                        width: 200,
+                        "assets/images/${hotelList[index]["images"][imagesIndex]}",
+                        fit: BoxFit.cover,
+                        ),
+                     
                     );
                   }),
             ),
           ]))
         ],
       ),
+    );
+  }
+}
+
+
+class ExpandedTextWidget extends StatefulWidget {
+  const ExpandedTextWidget({super.key, required this.text});
+  final String text;
+
+  @override
+  State<ExpandedTextWidget> createState() => _ExpandedTextWidgetState();
+}
+
+class _ExpandedTextWidgetState extends State<ExpandedTextWidget> {
+  bool isExapanded = false;
+    _toggleExpansion(){
+      setState(() {
+        isExapanded = !isExapanded;
+      });
+      print("The value is $isExapanded");
+    }
+
+  @override
+  Widget build(BuildContext context) {
+    
+    var textWidget = Text(
+      widget.text,
+      maxLines: isExapanded?null:8,
+      overflow: isExapanded?TextOverflow.visible:TextOverflow.ellipsis,
+    );
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        textWidget,
+        GestureDetector(
+          onTap: (){
+            _toggleExpansion();
+          },
+          child: Text(
+            isExapanded?'Less':'More',
+            style: AppStyles.textStyle.copyWith(
+              color: AppStyles.primaryColor
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
